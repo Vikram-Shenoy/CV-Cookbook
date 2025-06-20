@@ -55,6 +55,16 @@ while True:
     key = cv2.waitKey(1) & 0xFF
     if key == ord('q'):
         break
+    elif key == 27:  # ESC key pressed
+        lines.clear()
+        print("Resetting clicked points... start again.")
+        flash = frame.copy()
+        overlay = flash.copy()
+        cv2.rectangle(overlay, (0, 0), (w, h), (0, 0, 0), -1)
+        alpha = 0.1  # transparency
+        cv2.addWeighted(overlay, alpha, flash, 1 - alpha, 0, flash)
+        cv2.imshow("Click Lines", flash)
+        cv2.waitKey(100)
 
 # Ensure windows are closed BEFORE continuing
 cv2.setMouseCallback("Click Lines", lambda *args: None)  # remove callback
@@ -112,7 +122,7 @@ while cap.isOpened():
             cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 255), 2)
             track_id = int(box.id.item()) if box.id is not None else None
             cx = int((x1 + x2) / 2)
-            cy = int((y1 + y2) / 2)
+            cy = int(y1)
             curr_centroid = (cx, cy)
             cv2.circle(frame, curr_centroid, 4, (255, 255, 255), -1)
 
@@ -140,11 +150,6 @@ while cap.isOpened():
     # Draw both lines
     cv2.line(frame, line1_start, line1_end, (0, 255, 255), line_thickness)
     cv2.line(frame, line2_start, line2_end, (255, 0, 255), line_thickness)
-
-    cv2.putText(frame, f"Line 1 Count: {count1}", (20, 40),
-                cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2)
-    cv2.putText(frame, f"Line 2 Count: {count2}", (20, 80),
-                cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2)
 
     out.write(frame)
 
