@@ -34,6 +34,7 @@ print("Click 2 points for Line 1, then 2 points for Line 2. Press 'q' to confirm
 cv2.namedWindow("Click Lines, press 'q' to complete")
 cv2.setMouseCallback("Click Lines", click_event)
 
+# Line drawing loop
 while True:
     temp_frame = frame.copy()
 
@@ -138,4 +139,4 @@ while cap.isOpened():
 
 cap.release()
 out.release()
-print("Saved video as output_click_lines.mp4")
+print("Saved video as output.mp4")
