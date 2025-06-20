@@ -31,7 +31,7 @@ if not ret:
     exit()
 
 print("Click 2 points for Line 1, then 2 points for Line 2. Press 'q' to confirm and continue.")
-cv2.namedWindow("Click Lines")
+cv2.namedWindow("Click Lines, press 'q' to complete")
 cv2.setMouseCallback("Click Lines", click_event)
 
 while True:
@@ -43,7 +43,7 @@ while True:
             color = (0, 255, 255) if i == 0 else (255, 0, 255)
             cv2.line(temp_frame, lines[i], lines[i+1], color, 2)
 
-    cv2.imshow("Click Lines", temp_frame)
+    cv2.imshow("Click Lines, press 'q' once complete", temp_frame)
 
     key = cv2.waitKey(1) & 0xFF
     if key == ord('q'):
@@ -130,9 +130,9 @@ while cap.isOpened():
     cv2.line(frame, line2_start, line2_end, (255, 0, 255), line_thickness)
 
     cv2.putText(frame, f"Line 1 Count: {count1}", (20, 40),
-                cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2)
+                cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2)
     cv2.putText(frame, f"Line 2 Count: {count2}", (20, 80),
-                cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 255), 2)
+                cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2)
 
     out.write(frame)
 
