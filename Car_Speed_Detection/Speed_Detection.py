@@ -18,13 +18,24 @@ out = cv2.VideoWriter("Car_Speed_Detection/Output_videos/output.mp4", cv2.VideoW
 
 # ---- INTERACTIVE LINE DRAWING ----
 # ---- DEFAULT LINE POSITIONS ----
-default_line1_start = (251, 484)
-default_line1_end   = (550, 514)
-default_line2_start = (692, 460)
-default_line2_end   = (904, 435)
+default_line1_start = (287, 459)
+default_line1_end   = (578, 472)
+default_line2_start = (133, 553)
+default_line2_end   = (545, 597)
 
 lines = []
 
+mouse_position = (0, 0)
+
+def live_mouse_pos(event, x, y, flags, param):
+    global mouse_position
+    mouse_position = (x, y)
+    if event == cv2.EVENT_LBUTTONDOWN and len(lines) < 4:
+        lines.append((x, y))
+        print(f"Clicked: ({x}, {y})")
+
+
+# Deprecated click_event function
 def click_event(event, x, y, flags, param):
     if event == cv2.EVENT_LBUTTONDOWN and len(lines) < 4:
         lines.append((x, y))
@@ -38,17 +49,22 @@ if not ret:
 
 print("Click 2 points for Line 1, then 2 points for Line 2. Press 'q' to confirm and continue.")
 cv2.namedWindow("Click Lines")
-cv2.setMouseCallback("Click Lines", click_event)
+cv2.setMouseCallback("Click Lines", live_mouse_pos)
 
 # Line drawing loop
 while True:
     temp_frame = frame.copy()
-
+    num_points = len(lines)
     # Draw user lines while clicking
-    for i in range(0, len(lines), 2):
-        if i + 1 < len(lines):
+    for i in range(0, num_points, 2):
+        if i + 1 < num_points:
             color = (0, 255, 255) if i == 0 else (255, 0, 255)
             cv2.line(temp_frame, lines[i], lines[i+1], color, 2)
+
+    if num_points % 2 == 1:
+        color = (0, 255, 255) if num_points == 1 else (255, 0, 255)
+        cv2.line(temp_frame, lines[-1], mouse_position, color, 1)
+
 
     cv2.imshow("Click Lines", temp_frame)
 
@@ -122,7 +138,7 @@ while cap.isOpened():
             cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 255), 2)
             track_id = int(box.id.item()) if box.id is not None else None
             cx = int((x1 + x2) / 2)
-            cy = int(y1)
+            cy = int(y2)
             curr_centroid = (cx, cy)
             cv2.circle(frame, curr_centroid, 4, (255, 255, 255), -1)
 
