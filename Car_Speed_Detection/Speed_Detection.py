@@ -8,7 +8,7 @@ entry_times = {}  # track_id → entry timestamp
 exit_records = []  # list of dicts: {id, entry_time, exit_time}
 
 
-model = YOLO("yolov8s.pt")  # or 'yolov8s.pt' for better accuracy
+model = YOLO("yolov8s.pt")  # or 'yolov8m.pt' for better accuracy
 
 cap = cv2.VideoCapture("Car_Speed_Detection/video_raw/input.mp4")
 fps = int(cap.get(cv2.CAP_PROP_FPS))
@@ -24,7 +24,8 @@ default_line2_start = (133, 553)
 default_line2_end   = (545, 597)
 
 lines = []
-
+speed_display = []  # to store speed display messages
+dist = 13  # distance in meters between the two lines
 mouse_position = (0, 0)
 
 def live_mouse_pos(event, x, y, flags, param):
@@ -33,6 +34,27 @@ def live_mouse_pos(event, x, y, flags, param):
     if event == cv2.EVENT_LBUTTONDOWN and len(lines) < 4:
         lines.append((x, y))
         print(f"Clicked: ({x}, {y})")
+import cv2
+
+def put_text_with_simple_blur(img, text, org, font, font_scale, color, thickness=1, pad=1):
+    # Get text size
+    (w, h), baseline = cv2.getTextSize(text, font, font_scale, thickness)
+    x, y = org
+
+    # Define ROI coordinates with padding
+    x1, y1 = max(x - pad, 0), max(y - h - baseline - pad, 0)
+    x2, y2 = x + w + pad, y + baseline + pad
+
+    # Extract ROI and apply blur
+    roi = img[y1:y2, x1:x2]
+    blurred_roi = cv2.GaussianBlur(roi, (15, 15), 0)
+
+    # Put blurred ROI back
+    img[y1:y2, x1:x2] = blurred_roi
+
+    # Draw text on top
+    cv2.putText(img, text, org, font, font_scale, color, thickness, cv2.LINE_AA)
+
 
 
 # Deprecated click_event function
@@ -155,6 +177,11 @@ while cap.isOpened():
                     elif track_id in entry_times and crossed_line(prev_centroid, curr_centroid, line2_start, line2_end):
                         exit_time = datetime.now()
                         entry_time = entry_times.pop(track_id)
+                        time_diff = (exit_time - entry_time).total_seconds()
+                        speed_mps = dist / time_diff
+                        speed_kmph = speed_mps * 3.6  # convert to km/h
+
+                        speed_display.append(f"Vehicle {track_id}: {speed_kmph:.1f} km/h")
                         exit_records.append({
                             'Vehicle_id': track_id,
                             'Entry_time': entry_time.strftime('%H:%M:%S.%f'),
@@ -166,10 +193,11 @@ while cap.isOpened():
     # Draw both lines
     cv2.line(frame, line1_start, line1_end, (0, 255, 255), line_thickness)
     cv2.line(frame, line2_start, line2_end, (255, 0, 255), line_thickness)
-
+    # Overlay speed display
+    for i, text in enumerate(speed_display[-15:]):  # show last 10 vehicles max
+        y = 20 + i * 30
+        put_text_with_simple_blur(frame, text, (20, y), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 2)
     out.write(frame)
-
-
 
 with open('vehicle_timings.csv', 'w', newline='') as f:
     writer = csv.DictWriter(f, fieldnames=['Vehicle_id', 'Entry_time', 'Exit_time'])
