@@ -16,6 +16,15 @@ def mouse_callback(event, x, y, flags, param):
             calibration_points.append((x, y))
             print(f"Point {len(calibration_points)} selected: ({x}, {y})")
 
+def point_to_line_segment_dist(p, v, w):
+    """Calculates the shortest distance from a point p to a line segment vw."""
+    l2 = np.sum((w - v)**2)
+    if l2 == 0.0:
+        return np.linalg.norm(p - v)
+    t = max(0, min(1, np.dot(p - v, w - v) / l2))
+    projection = v + t * (w - v)
+    return np.linalg.norm(p - projection)
+
 def main():
     global pixels_per_meter, calibration_points
 
@@ -24,10 +33,9 @@ def main():
     output_video_path = 'Car_Speed_Detection/Output_videos/speed_output.mp4'
     
     # --- Default Calibration Points ---
-    # These are fallback points if the user doesn't provide them.
     # NOTE: These are placeholders and MUST be adjusted for your specific video.
     # Format: [dist_p1, dist_p2, line_p1, line_p2]
-    default_points = [(353, 463), (202, 574), (269, 469), (569, 491)]
+    default_points = [(353, 463), (202, 574), (301, 450), (575, 467)]
     # --- Component 1: Interactive 4-Point Calibration ---
     cap = cv2.VideoCapture(video_path)
     if not cap.isOpened():
@@ -95,7 +103,7 @@ def main():
     video_writer = cv2.VideoWriter(output_video_path, fourcc, video_fps, (frame_width, frame_height))
 
     frame_number = 0
-    overlay_update_frequency = int(video_fps)
+    overlay_update_frequency = 5 # Update overlay every 5 frames
     displayable_overlay_info = []
 
     cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
@@ -118,15 +126,25 @@ def main():
             clss = results[0].boxes.cls.int().cpu().tolist()
 
             for box, track_id, cls in zip(boxes, track_ids, clss):
+                # Filter for detection size
+                box_width = box[2] - box[0]
+                box_height = box[3] - box[1]
+                if (box_width * box_height) < 3000:
+                    continue
                 centroid_x = int((box[0] + box[2]) / 2)
                 centroid_y = int (box[3])
                 centroid = (centroid_x, centroid_y)
                 
                 # Activation Line Logic
                 if track_id not in activated_tracks:
-                    p1, p2 = activation_line_points
-                    cross_product = (p2[0] - p1[0]) * (centroid_y - p1[1]) - (p2[1] - p1[1]) * (centroid_x - p1[0])
-                    if cross_product > 0:
+                    p1 = np.array(activation_line_points[0])
+                    p2 = np.array(activation_line_points[1])
+                    p_centroid = np.array(centroid)
+                    
+                    distance = point_to_line_segment_dist(p_centroid, p1, p2)
+                    
+                    touching_threshold = 10 # A 10-pixel threshold for "touching"
+                    if distance < touching_threshold:
                         activated_tracks.add(track_id)
 
                 if track_id in activated_tracks:
@@ -145,7 +163,7 @@ def main():
                     cv2.rectangle(frame, (int(box[0]), int(box[1])), (int(box[2]), int(box[3])), (0, 0, 255), 2)
                     cv2.circle(frame, centroid, 5, (255, 255, 255), -1)
                     cv2.putText(frame, f"{class_name} ID:{track_id}", (int(box[0]), int(box[1]) - 10), 
-                                cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
 
         # Draw calibration and activation lines
         cv2.line(frame, distance_points[0], distance_points[1], (0, 255, 255), 2)
@@ -158,7 +176,7 @@ def main():
         overlay_y_start = 40
         for i, info_text in enumerate(displayable_overlay_info):
             cv2.putText(frame, info_text, (frame_width - 300, overlay_y_start + i * 30),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2)
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.8, (1, 1, 1), 2)
         
         video_writer.write(frame)
 
