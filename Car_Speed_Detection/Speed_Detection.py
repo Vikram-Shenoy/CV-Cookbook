@@ -187,7 +187,7 @@ while cap.isOpened():
                             'Entry_time': entry_time.strftime('%H:%M:%S.%f'),
                             'Exit_time': exit_time.strftime('%H:%M:%S.%f'),
                         })
-                cv2.putText(frame, f"{class_name}ID {track_id}", (x1, y1 - 10),
+                cv2.putText(frame, f"{class_name} ID {track_id}", (x1, y1 - 10),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 0), 2)
 
     # Draw both lines
