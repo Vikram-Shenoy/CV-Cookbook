@@ -1,9 +1,9 @@
 # CV-Cookbook
 A cookbook for Computer Vision Algorithms, notes, and programs.
 
-📂 Vehicle Speed Detection
+## Vehicle Speed Detection
 - Apply various methods to determine speed of vehicles on a highway.
-## Distance - Time Estimation
+### 1. Distance - Time Estimation
 What is it?
 - Draw two parrallel lines, a known distance apart.
 - Divide the time it takes for a vehicle to cross this known distance, to get the speed of the vehicle.
