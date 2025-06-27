@@ -16,8 +16,8 @@ What is it?
 ### 2. Optical Flow - Lucas Kanade Method
 
 <p align="center">
-  
-  ![image](https://github.com/user-attachments/assets/cb4bee06-5d8e-42bd-b69a-f3971982d705)
+
+<img src="https://github.com/user-attachments/assets/cb4bee06-5d8e-42bd-b69a-f3971982d705" alt="Example frame from output video" width="650" height="400">
 
 </p>
 
