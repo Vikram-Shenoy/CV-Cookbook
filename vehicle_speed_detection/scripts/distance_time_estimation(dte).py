@@ -200,7 +200,7 @@ while cap.isOpened():
     # Overlay speed display
     for i, text in enumerate(speed_display[-15:]):  # show last 10 vehicles max
         y = 20 + i * 30
-        put_text_with_simple_blur(frame, text, (20, y), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 2)
+        put_text_with_simple_blur(frame, text, (1000, y), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 2)
     out.write(frame)
 
 output_file = os.path.join(data_output, 'dte_vehicle_timings.csv')
