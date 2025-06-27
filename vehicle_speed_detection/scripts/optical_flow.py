@@ -158,7 +158,7 @@ def main():
 
         # Draw the region speed text
         cv2.putText(frame, f"Region Speed: {int(speed_kph)} km/h", 
-                    (frame_width - 350, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+                    (frame_width - 500, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (1, 1, 1), 2)
         
         video_writer.write(frame)
 
