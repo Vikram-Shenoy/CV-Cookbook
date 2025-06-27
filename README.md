@@ -12,6 +12,14 @@ What is it?
 <img src="https://github.com/user-attachments/assets/10cec959-ed64-4788-87ad-21b6d60463a3" alt="Example frame from output video" width="650" height="400">
 </p>
 - The distance between these two lines is determined based on environmental cues. In our case I have used the known distance between the gap in the highway shoulder markings on french highways.
+
+### 2. Optical Flow - Lucas Kanade Method
+
+<p align="center">
   
+  ![image](https://github.com/user-attachments/assets/cb4bee06-5d8e-42bd-b69a-f3971982d705)
+
+</p>
+
 ## Face Recoginition [Work In Progress]
 - Gather Face information and name assigned from a folder, and detect if that face is present in the current frame.
