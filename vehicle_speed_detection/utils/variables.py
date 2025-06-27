@@ -1,0 +1,1 @@
+INPUT_VIDEO = "vehicle_speed_detection/videos/input/highway_clipped.mp4"
