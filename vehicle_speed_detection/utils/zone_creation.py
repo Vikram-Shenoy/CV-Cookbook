@@ -6,6 +6,7 @@ import argparse
 
 # --- Configuration ---
 # You can adjust these values
+POINT_OFFSET = 20  
 ZONE_OFFSET_X = 150  # The horizontal distance to create the parallel lines
 LINE_THICKNESS = 2
 CIRCLE_RADIUS = 5
@@ -46,7 +47,7 @@ def select_points_callback(event, x, y, flags, param):
     
     if event == cv2.EVENT_LBUTTONDOWN:
         if len(points) < 2:
-            points.append((x, y))
+            points.append((x-20, y))
             # Draw a circle on the clone to give visual feedback
             cv2.circle(frame_clone, (x, y), CIRCLE_RADIUS, POINT_COLOR, -1)
             print(f"Point {len(points)} selected: ({x}, {y})")
@@ -79,6 +80,7 @@ def create_zones_from_video(video_path):
     # 2. Setup window and mouse callback
     window_name = "Zone Creator - Click two points"
     cv2.namedWindow(window_name)
+
     cv2.setMouseCallback(window_name, select_points_callback)
 
     print("--- Zone Creation Utility ---")
@@ -100,7 +102,8 @@ def create_zones_from_video(video_path):
         if key == 27:
             print("\nExiting program gracefully.")
             cv2.destroyAllWindows()
-            sys.exit(0)
+            cv2.waitKey(1)
+            return None
 
         # 'r' key to reset
         elif key == ord('r'):
@@ -114,9 +117,10 @@ def create_zones_from_video(video_path):
                 print("\nTwo points selected. Proceeding to create zones.")
                 break
             else:
-                print("\nError: You must select exactly two points before pressing 'C'. Exiting.")
+                print("\nError: You must select exactly two points before pressing 'C'. Exiting Zone Creator.")
                 cv2.destroyAllWindows()
-                sys.exit(1)
+                cv2.waitKey(1)
+                return None
                 
     cv2.destroyAllWindows()
     cv2.waitKey(1)  # Wait for a brief moment to ensure the window closes
@@ -169,18 +173,26 @@ def create_zones_from_video(video_path):
     cv2.line(output_image, p_left_1, p_right_1, LINE_COLOR, LINE_THICKNESS)
     cv2.line(output_image, p_left_2, p_right_2, LINE_COLOR, LINE_THICKNESS)
 
-    # Save the output image
-    base_name = os.path.basename(video_path)
-    file_name_without_ext = os.path.splitext(base_name)[0]
-    output_filename = f"{file_name_without_ext}_zones_example.png"
-    cv2.imwrite(output_filename, output_image)
-    print(f"Example zone image saved as '{output_filename}'")
+    # Define the output directory
+    output_dir = "vehicle_speed_detection/frames/output"
+    
+    # Create the directory and any necessary parent directories if they don't exist
+    os.makedirs(output_dir, exist_ok=True)
+    
+    # Construct the full path for the output image
+    output_filename = "zones_example.png"
+    full_output_path = os.path.join(output_dir, output_filename)
+
+    # Save the output image to the specified path
+    cv2.imwrite(full_output_path, output_image)
+    print(f"Example zone image saved as '{full_output_path}'")
     
     # Display the final image
     cv2.imshow("Final Zones Created", output_image)
     print("Press any key to close the final image.")
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+    cv2.waitKey(1)  # Wait for a brief moment to ensure the window closes
     
     return final_six_points
 
@@ -194,3 +206,4 @@ if __name__ == "__main__":
     video_path = "vehicle_speed_detection/videos/input/highway_clipped.mp4"
     points = create_zones_from_video(video_path)
     print(points)
+    # return points
