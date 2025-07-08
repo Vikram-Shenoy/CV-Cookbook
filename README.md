@@ -17,7 +17,7 @@ What is it?
 
 <p align="center">
 
-<img src="https://github.com/user-attachments/assets/17ac9418-63e5-455a-8f4b-551a3e463b0c" alt="Example frame from output video" width="650" height="400">
+<img src="https://github.com/user-attachments/assets/de508d59-1d07-4f82-ba26-1325c38e2498" alt="Example frame from output video" width="650" height="400">
 
 </p>
 
