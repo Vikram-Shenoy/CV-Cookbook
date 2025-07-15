@@ -174,7 +174,7 @@ def create_zones_from_video(video_path):
     cv2.line(output_image, p_left_2, p_right_2, LINE_COLOR, LINE_THICKNESS)
 
     # Define the output directory
-    output_dir = "vehicle_speed_detection/frames/output"
+    output_dir = "2. vehicle_speed_detection/frames/output"
     
     # Create the directory and any necessary parent directories if they don't exist
     os.makedirs(output_dir, exist_ok=True)
@@ -203,7 +203,7 @@ if __name__ == "__main__":
     # )
     # parser.add_argument("video_path", type=str, help="Path to the input mp4 video file.")
     # args = parser.parse_args()
-    video_path = "vehicle_speed_detection/videos/input/highway_clipped.mp4"
+    video_path = "2. vehicle_speed_detection/videos/input/highway_clipped.mp4"
     points = create_zones_from_video(video_path)
     print(points)
     # return points
