@@ -1,5 +1,7 @@
 # Virtual environment
 .venv/
+/3. Gesture Recognition/gesture_venv/
+/3. Gesture Recognition/.python-version
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.pyc
@@ -10,3 +12,4 @@ yolov8s.pt
 yolov8m.pt
 yolov8l.pt
 yolov8x.pt
+
