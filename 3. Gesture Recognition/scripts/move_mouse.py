@@ -34,7 +34,7 @@ def main():
 
     # --- Control Variables ---
     # Sensitivity factor for mouse movement. Higher value = more sensitive.
-    sensitivity = 2.5
+    sensitivity = 1
     
     # Activation delay variables
     gesture_start_time = None
@@ -143,7 +143,7 @@ def main():
             mp_draw.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
 
         # --- Display the output ---
-        cv2.imshow('Hand Tracking Mouse Control', frame)
+        # cv2.imshow('Hand Tracking Mouse Control', frame)
 
         # Exit the loop when 'q' is pressed
         if cv2.waitKey(5) & 0xFF == ord('q'):
