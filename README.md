@@ -1,7 +1,7 @@
 # CV-Cookbook
 A cookbook for Computer Vision Algorithms, notes, and programs.
 
-## Virtual mouse with Computer Vision
+## Virtual mouse
 - Currently using mediapipe, opencv and pyautoGUI to detect hand gesture which will translate to mouse movement, scroll, click. Just by hoevering your hand in the air.
 
 
