@@ -8,7 +8,16 @@ from utils.gesture_detector import GestureDetector
 # --- Configuration for this specific use case ---
 # Use MediaPipe landmark indices
 # Target: Thumb tip to Index tip
-TARGET_LANDMARK_1 = 4
+"""
+FINGERTIP_LANDMARKS = {
+    "thumb": 4,
+    "index": 8,
+    "middle": 12,
+    "ring": 16,
+    "pinky": 20,
+}
+"""
+TARGET_LANDMARK_1 = 12
 TARGET_LANDMARK_2 = 8
 # Reference: Index knuckle to Middle knuckle
 REF_LANDMARK_1 = 5
@@ -52,11 +61,12 @@ def main():
         # Process the frame and get the result dictionary
         # We pass draw=True to let the class handle visualization
         result = detector.process_frame(image, draw=True)
-
+        print(f"Result: {result}")
         # --- Use the result from the detector in your application ---
         if result["status"]:
+            pass
             # Example action: Print a message to the console when touching
-            print(f"Gesture Detected! Smoothed Ratio: {result['ratio']:.2f}")
+            #print(f"Gesture Detected! Smoothed Ratio: {result['ratio']:.2f}")
             # Here you could trigger other actions (e.g., control a mouse, play a sound)
         
         cv2.imshow('Gesture Detection Example', image)

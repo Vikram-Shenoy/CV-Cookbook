@@ -1,6 +1,30 @@
-# main.py
-# To install necessary libraries, run the following commands in your terminal:
-# pip install mediapipe opencv-python
+"""
+After testing the following fallback logic:
+# Attempt 1 (Primary - Palm):
+
+First, check the visibility score for both the index knuckle (5) and the pinky knuckle (17).
+
+Only if both landmarks have a high visibility score (e.g., > 0.5), do we trust the "Palm" reference.
+
+# Attempt 2 (Fallback - Knuckle):
+
+If the visibility check for the palm fails (meaning the pinky is likely hidden), we then proceed to the fallback.
+
+We check the visibility score for the index knuckle (5) and the middle finger knuckle (9).
+
+If these are visible, we use the "Knuckle" reference.
+
+# Failure Case:
+
+If neither set of landmarks is clearly visible, we don't have a reliable ruler for that frame, and we hold the last known status.
+
+## Conclusion:
+This approach doesn't work well in practice, as mediapipe guesses the visibility of landmarks based on their 
+position in the image, which can lead to false positives or negatives. 
+Instead, we will simplify the logic to use a single palm reference and apply temporal smoothing to 
+determine touch status.
+
+"""
 
 import cv2
 import mediapipe as mp
