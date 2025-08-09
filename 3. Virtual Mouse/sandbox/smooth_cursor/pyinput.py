@@ -10,8 +10,8 @@ MOVE_DURATION = 10  # Total duration of the movement in seconds
 mouse = Controller()
 
 # --- Script Start ---
-print("Starting in 3 seconds... Get ready!")
-time.sleep(3)
+print("Starting in 1 seconds... Get ready!")
+time.sleep(1)
 
 # 1. Get screen dimensions and define start/end points
 # We use pyautogui here because its size() function is reliable and simple

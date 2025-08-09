@@ -143,7 +143,7 @@ def main():
             mp_draw.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
 
         # --- Display the output ---
-        # cv2.imshow('Hand Tracking Mouse Control', frame)
+        cv2.imshow('Hand Tracking Mouse Control', frame)
 
         # Exit the loop when 'q' is pressed
         if cv2.waitKey(5) & 0xFF == ord('q'):
