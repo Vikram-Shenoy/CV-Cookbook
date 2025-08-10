@@ -30,11 +30,11 @@ while True:
     progress = min(1.0, elapsed_time / MOVE_DURATION) # Ensure progress doesn't exceed 1.0
 
     # Apply the same smooth easing function
-    eased_progress = -(math.cos(math.pi * progress) - 1) / 2
+    # eased_progress = -(math.cos(math.pi * progress) - 1) / 2
 
     # Calculate the new interpolated X and Y coordinates
-    current_x = start_x + (end_x - start_x) * eased_progress
-    current_y = start_y + (end_y - start_y) * eased_progress
+    current_x = start_x + (end_x - start_x) * progress
+    current_y = start_y + (end_y - start_y) * progress
     
     # 3. Move the mouse to the calculated position using pynput
     mouse.position = (current_x, current_y)
