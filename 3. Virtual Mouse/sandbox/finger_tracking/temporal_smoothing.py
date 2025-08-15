@@ -19,7 +19,7 @@ LANDMARK_INDICES = {
 # The ratio threshold for determining a "touch".
 TOUCHING_RATIO_THRESHOLD = 1.5
 # The number of frames to average over for smoothing. A larger number means more smoothing but more delay.
-HISTORY_BUFFER_SIZE = 10
+HISTORY_BUFFER_SIZE = 1
 
 
 def draw_text_with_background(image, text, position, font, scale, color, bg_color):

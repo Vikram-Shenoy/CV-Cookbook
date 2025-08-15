@@ -4,7 +4,8 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from utils.gesture_detector import GestureDetector
-
+# Add this line with your other imports
+from utils.mouse_controller import VirtualMouseController
 # --- Configuration for this specific use case ---
 # Use MediaPipe landmark indices
 # Target: Thumb tip to Index tip
@@ -17,14 +18,14 @@ FINGERTIP_LANDMARKS = {
     "pinky": 20,
 }
 """
-TARGET_LANDMARK_1 = 12
+TARGET_LANDMARK_1 = 4
 TARGET_LANDMARK_2 = 8
 # Reference: Index knuckle to Middle knuckle
 REF_LANDMARK_1 = 5
 REF_LANDMARK_2 = 9
 
 TOUCHING_RATIO_THRESHOLD = 1.5
-HISTORY_BUFFER_SIZE = 10
+HISTORY_BUFFER_SIZE = 15
 
 def main():
     """
@@ -39,7 +40,8 @@ def main():
         touch_threshold=TOUCHING_RATIO_THRESHOLD,
         buffer_size=HISTORY_BUFFER_SIZE
     )
-
+    # Initialize the mouse controller
+    mouse_controller = VirtualMouseController(scale_factor=2.5, smoothing_buffer_size=5)
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
         print("Error: Could not open video stream.")
@@ -61,8 +63,12 @@ def main():
         # Process the frame and get the result dictionary
         # We pass draw=True to let the class handle visualization
         result = detector.process_frame(image, draw=True)
-        print(f"Result: {result}")
+        # print(f"Result: {result['status']}, Ratio: {result['ratio']} ,Target Cords: {result['target_coords']}")
         # --- Use the result from the detector in your application ---
+        mouse_controller.move_mouse(
+            current_gesture_status=result["status"],
+            gesture_coords=result["target_coords"]
+            )
         if result["status"]:
             pass
             # Example action: Print a message to the console when touching
