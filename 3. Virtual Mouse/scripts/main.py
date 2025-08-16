@@ -5,7 +5,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from utils.gesture_detector import GestureDetector
 # Add this line with your other imports
-from utils.mouse_controller import VirtualMouseController
+from utils.mouse_controller_curr import VirtualMouseController
 # --- Configuration for this specific use case ---
 # Use MediaPipe landmark indices
 # Target: Thumb tip to Index tip
@@ -24,7 +24,7 @@ TARGET_LANDMARK_2 = 8
 REF_LANDMARK_1 = 17
 REF_LANDMARK_2 = 0
 
-TOUCHING_RATIO_THRESHOLD = 0.25
+TOUCHING_RATIO_THRESHOLD = 0.23
 HISTORY_BUFFER_SIZE = 1
 
 
@@ -48,7 +48,9 @@ def main():
     # Initialize the mouse controller
     mouse_controller = VirtualMouseController(
         scale_factor=MOUSE_SCALE_FACTOR, 
-        smoothing_buffer_size=MOUSE_SMOOTHING_BUFFER_SIZE
+        smoothing_buffer_size=MOUSE_SMOOTHING_BUFFER_SIZE,
+        touch_threshold=TOUCHING_RATIO_THRESHOLD, 
+        dampening_zone_start= 0.18
         )
     
     cap = cv2.VideoCapture(0)
@@ -76,7 +78,8 @@ def main():
         # --- Use the result from the detector in your application ---
         mouse_controller.move_mouse(
             current_gesture_status=result["status"],
-            gesture_coords=result["target_coords"]
+            gesture_coords=result["target_coords"],
+            ratio=result["ratio"]
             )
         if result["status"]:
             pass
