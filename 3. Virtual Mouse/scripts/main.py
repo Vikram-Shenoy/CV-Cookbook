@@ -21,11 +21,16 @@ FINGERTIP_LANDMARKS = {
 TARGET_LANDMARK_1 = 4
 TARGET_LANDMARK_2 = 8
 # Reference: Index knuckle to Middle knuckle
-REF_LANDMARK_1 = 5
-REF_LANDMARK_2 = 9
+REF_LANDMARK_1 = 17
+REF_LANDMARK_2 = 0
 
-TOUCHING_RATIO_THRESHOLD = 1.5
-HISTORY_BUFFER_SIZE = 15
+TOUCHING_RATIO_THRESHOLD = 0.25
+HISTORY_BUFFER_SIZE = 1
+
+
+# Mouse controller configuration
+MOUSE_SCALE_FACTOR = 2  # Adjust this for mouse sensitivity
+MOUSE_SMOOTHING_BUFFER_SIZE = 8 
 
 def main():
     """
@@ -41,7 +46,11 @@ def main():
         buffer_size=HISTORY_BUFFER_SIZE
     )
     # Initialize the mouse controller
-    mouse_controller = VirtualMouseController(scale_factor=2.5, smoothing_buffer_size=5)
+    mouse_controller = VirtualMouseController(
+        scale_factor=MOUSE_SCALE_FACTOR, 
+        smoothing_buffer_size=MOUSE_SMOOTHING_BUFFER_SIZE
+        )
+    
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
         print("Error: Could not open video stream.")
