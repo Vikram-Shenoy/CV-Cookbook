@@ -25,12 +25,12 @@ REF_LANDMARK_1 = 17
 REF_LANDMARK_2 = 0
 
 TOUCHING_RATIO_THRESHOLD = 0.23
-HISTORY_BUFFER_SIZE = 1
+HISTORY_BUFFER_SIZE = 10
 
 
 # Mouse controller configuration
-MOUSE_SCALE_FACTOR = 2  # Adjust this for mouse sensitivity
-MOUSE_SMOOTHING_BUFFER_SIZE = 8 
+MOUSE_SCALE_FACTOR = 2.5 # Adjust this for mouse sensitivity
+MOUSE_SMOOTHING_BUFFER_SIZE = 5 
 
 def main():
     """
@@ -50,7 +50,7 @@ def main():
         scale_factor=MOUSE_SCALE_FACTOR, 
         smoothing_buffer_size=MOUSE_SMOOTHING_BUFFER_SIZE,
         touch_threshold=TOUCHING_RATIO_THRESHOLD, 
-        dampening_zone_start= 0.18
+        dampening_zone_start= 0.15
         )
     
     cap = cv2.VideoCapture(0)
