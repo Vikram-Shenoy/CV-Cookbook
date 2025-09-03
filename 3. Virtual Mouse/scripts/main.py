@@ -87,7 +87,7 @@ def main():
             #print(f"Gesture Detected! Smoothed Ratio: {result['ratio']:.2f}")
             # Here you could trigger other actions (e.g., control a mouse, play a sound)
         
-        cv2.imshow('Gesture Detection Example', image)
+        # cv2.imshow('Gesture Detection Example', image)
 
         if cv2.waitKey(5) & 0xFF == ord('q'):
             break
