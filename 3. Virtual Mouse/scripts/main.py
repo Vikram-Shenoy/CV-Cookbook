@@ -69,45 +69,47 @@ def main():
         image = cv2.flip(image, 1)
 
         # Get gesture results from the detector
+        # Process frame
         result = detector.process_frame(image, draw=True)
         is_pinching = result["status"]
 
         # --- State Machine Logic ---
 
-        # State: IDLE
         if current_state == "IDLE":
             if is_pinching:
-                # Pinch has just started, enter the decision-making state
+                # Transition: Pinch detected
                 current_state = "PINCH_DETECTED"
                 pinch_start_frame = frame_counter
-                print("State change: -> PINCH_DETECTED")
+                print("State change: IDLE -> PINCH_DETECTED")
 
-        # State: PINCH_DETECTED (Deciding if it's a click or a move)
         elif current_state == "PINCH_DETECTED":
+            pinch_duration = frame_counter - pinch_start_frame
+
             if not is_pinching:
-                # User released before the threshold -> It's a CLICK
+                # Short pinch = Click
                 print("Action: CLICK")
                 mouse_controller.click()
                 current_state = "IDLE"
-                print("State change: -> IDLE")
-            elif (frame_counter - pinch_start_frame) > CLICK_FRAME_THRESHOLD:
-                # User held the pinch long enough -> It's a MOVE
-                current_state = "MOVING"
-                print("State change: -> MOVING")
+                print("State change: PINCH_DETECTED -> IDLE")
 
-        # State: MOVING
+            elif pinch_duration > CLICK_FRAME_THRESHOLD:
+                # Long pinch = Move
+                current_state = "MOVING"
+                print("State change: PINCH_DETECTED -> MOVING")
+
         elif current_state == "MOVING":
             if is_pinching:
-                # Continue moving the mouse
+                # Continue moving mouse
                 mouse_controller.move_mouse(
                     current_gesture_status=True,
-                    gesture_coords=result["target_coords"],
-                    ratio=result["ratio"]
+                    gesture_coords=result.get("target_coords"),
+                    ratio=result.get("ratio"),
                 )
             else:
-                # User released the pinch, do nothing and return to idle
+                # Pinch released -> back to idle
                 current_state = "IDLE"
-                print("State change: -> IDLE (from MOVING)")
+                print("State change: MOVING -> IDLE")
+
 
         cv2.imshow('Virtual Mouse', image)
 
